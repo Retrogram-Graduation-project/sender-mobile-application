@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sender_app/helpers/provider.dart';
+import 'package:sender_app/screens/splash.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,11 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('MyApp'),
-        ),
+    return ChangeNotifierProvider(
+      create: (_) => RetroProvider(),
+      child: MaterialApp(
+        home: SplashScreen(),
       ),
     );
   }
