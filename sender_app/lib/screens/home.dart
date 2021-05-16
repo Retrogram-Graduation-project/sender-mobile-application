@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:sender_app/helpers/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
@@ -9,9 +12,199 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Home page'),
+      appBar: appBar(),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Color(0xff000b31),
+      body: SafeArea(
+        child: !Provider.of<RetroProvider>(context).isConnected
+            ? connected(context)
+            : notConnected(context),
       ),
     );
   }
+
+  Widget appBar() => AppBar(
+        title: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 7),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'RETRO',
+                style: TextStyle(
+                  fontSize: 24,
+                  letterSpacing: 2,
+                ),
+              ),
+              Icon(Icons.settings),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      );
+
+  Widget notConnected(context) => Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(vertical: 60),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'No connected RetroDevice.',
+              style: TextStyle(
+                letterSpacing: 1.5,
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+            GestureDetector(
+              // Implement connecting to Bluetooth
+              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Implement connecting to Bluetooth'))),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue,
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Connect',
+                  style: TextStyle(
+                    letterSpacing: 1.5,
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget connected(context) => Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(vertical: 60),
+        child: Column(
+          children: [
+            SizedBox(height: 60),
+            Text(
+              'Connected to',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                letterSpacing: 1.5,
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+            Text(
+              Provider.of<RetroProvider>(context).deviceName.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                letterSpacing: 1.5,
+                color: Color(0xff076dbb),
+                fontSize: 21,
+              ),
+            ),
+            SizedBox(height: 200),
+            Text(
+              'Select object\nto preview'.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                letterSpacing: 2,
+                color: Colors.grey[300].withOpacity(0.8),
+                fontSize: 15,
+              ),
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              // Implement selecting image.
+              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Implement selecting image'))),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue,
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Select'.toUpperCase(),
+                  style: TextStyle(
+                    letterSpacing: 1.5,
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 90),
+            Text(
+              'Sample for trial'.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                letterSpacing: 2,
+                color: Colors.grey[300].withOpacity(0.9),
+                fontSize: 15,
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                sample(),
+                sample(),
+                sample(),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  // Pass an image or a text to preview in sample.
+  Widget sample({String title, String imgPath}) => Container(
+        width: 50,
+        height: 50,
+        margin: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.blue,
+            width: 0.5,
+          ),
+          color: Color(0xff000b31),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue,
+              spreadRadius: 0.5,
+              blurRadius: 3,
+              offset: Offset(0, 0), // changes position of shadow
+            ),
+          ],
+        ),
+      );
 }
