@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sender_app/helpers/provider.dart';
 import 'package:sender_app/styles/style.dart';
@@ -26,7 +25,7 @@ class HomePage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            !Provider.of<RetroProvider>(context).isConnected
+            Provider.of<RetroProvider>(context).isConnected
                 ? connected(context)
                 : notConnected(context),
           ],
@@ -62,17 +61,31 @@ class HomePage extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(vertical: 60),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                'No connected RetroDevice.',
-                style: TextStyle(
-                  letterSpacing: 1.5,
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              margin: EdgeInsets.only(top: 60),
+              child: Column(
+                children: [
+                  Text(
+                    'No connected',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 1.5,
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Text(
+                    "RetroDevice",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 1.5,
+                      color: RetroColors.secondaryColor,
+                      fontSize: 21,
+                    ),
+                  ),
+                ],
               ),
             ),
             GestureDetector(
@@ -115,7 +128,7 @@ class HomePage extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(vertical: 60),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: 60),
             Text(
