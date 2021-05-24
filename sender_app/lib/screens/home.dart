@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Provider.of<RetroProvider>(context).isConnected
+            !Provider.of<RetroProvider>(context).isConnected
                 ? connected(context)
                 : notConnected(context),
           ],
@@ -172,9 +172,9 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            GestureDetector(
+            TextButton(
               // Implement selecting image.
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Implement selecting image'))),
               child: Container(
                 padding: EdgeInsets.symmetric(
