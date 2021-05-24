@@ -100,9 +100,9 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            GestureDetector(
+            TextButton(
               // Implement connecting to Bluetooth
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Implement connecting to Bluetooth'))),
               child: Container(
                 padding: EdgeInsets.symmetric(
