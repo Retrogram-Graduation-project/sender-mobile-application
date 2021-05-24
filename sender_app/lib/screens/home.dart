@@ -88,6 +88,18 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Text(
+                'Please run the RetroDevice and enable Bluetooth service',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  letterSpacing: 2,
+                  color: Colors.grey[300].withOpacity(0.9),
+                  fontSize: 15,
+                ),
+              ),
+            ),
             GestureDetector(
               // Implement connecting to Bluetooth
               onTap: () => ScaffoldMessenger.of(context).showSnackBar(
