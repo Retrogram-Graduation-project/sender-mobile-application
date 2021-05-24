@@ -15,9 +15,25 @@ class SplashScreen extends StatelessWidget {
             (_) => false);
       });
     });
-    return Scaffold(
-      body: Center(
-        child: Text('Splash - @Logo'),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: FractionalOffset.topRight,
+          end: FractionalOffset.bottomLeft,
+          colors: [
+            Color(0xff000046),
+            Color(0xff000025),
+            Color(0xff00000A),
+          ],
+          stops: [0.0, 0.5, 1.0],
+        ),
+      ),
+      child: Center(
+        child: Image.asset(
+          'assets/logo.png',
+          width: 150,
+          height: 250,
+        ),
       ),
     );
   }
