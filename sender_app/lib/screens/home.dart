@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sender_app/helpers/provider.dart';
+import 'package:sender_app/styles/style.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
@@ -15,17 +16,27 @@ class HomePage extends StatelessWidget {
       appBar: appBar(),
       extendBodyBehindAppBar: true,
       backgroundColor: Color(0xff000b31),
-      body: SafeArea(
-        child: !Provider.of<RetroProvider>(context).isConnected
-            ? connected(context)
-            : notConnected(context),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            !Provider.of<RetroProvider>(context).isConnected
+                ? connected(context)
+                : notConnected(context),
+          ],
+        ),
       ),
     );
   }
 
   Widget appBar() => AppBar(
         title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 7),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,7 +127,7 @@ class HomePage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 letterSpacing: 1.5,
-                color: Color(0xff076dbb),
+                color: RetroColors.secondaryColor,
                 fontSize: 21,
               ),
             ),
@@ -141,7 +152,7 @@ class HomePage extends StatelessWidget {
                   horizontal: 20,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: RetroColors.secondaryColor,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -192,14 +203,14 @@ class HomePage extends StatelessWidget {
         margin: EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.blue,
+            color: RetroColors.secondaryColor,
             width: 0.5,
           ),
           color: Color(0xff000b31),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue,
+              color: RetroColors.secondaryColor,
               spreadRadius: 0.5,
               blurRadius: 3,
               offset: Offset(0, 0), // changes position of shadow
