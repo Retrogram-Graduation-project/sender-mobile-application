@@ -19,7 +19,8 @@ class HomePage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background.png'),
+            image: AssetImage(
+                'assets/background1.png'), // "background" without half logos, "background1" with.
             fit: BoxFit.cover,
           ),
         ),
@@ -63,12 +64,15 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'No connected RetroDevice.',
-              style: TextStyle(
-                letterSpacing: 1.5,
-                color: Colors.white,
-                fontSize: 24,
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 50),
+              child: Text(
+                'No connected RetroDevice.',
+                style: TextStyle(
+                  letterSpacing: 1.5,
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
               ),
             ),
             GestureDetector(
@@ -111,6 +115,7 @@ class HomePage extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(vertical: 60),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(height: 60),
             Text(
@@ -141,7 +146,7 @@ class HomePage extends StatelessWidget {
                 fontSize: 15,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             GestureDetector(
               // Implement selecting image.
               onTap: () => ScaffoldMessenger.of(context).showSnackBar(
