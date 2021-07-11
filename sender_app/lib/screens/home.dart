@@ -483,13 +483,25 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
-                  controller: _textController,
-                  onSubmitted: (String value) {
-                    Nearby().sendBytesPayload(
-                        device.id, Uint8List.fromList(value.codeUnits));
-                    _textController.text = "";
-                  },
+                TextField(controller: _textController),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      child: Text("Close"),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    TextButton(
+                      child: Text("Send"),
+                      onPressed: () {
+                        if (_textController.text.isEmpty) return;
+                        Nearby().sendBytesPayload(device.id,
+                            Uint8List.fromList(_textController.text.codeUnits));
+                        _textController.text = "";
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
