@@ -204,24 +204,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 90),
-            Text(
-              'Sample for trial'.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                letterSpacing: 2,
-                color: Colors.grey[300].withOpacity(0.9),
-                fontSize: 15,
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                sample(),
-                sample(),
-                sample(),
-              ],
-            ),
           ],
         ),
       );
