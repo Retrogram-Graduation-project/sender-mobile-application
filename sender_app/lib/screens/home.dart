@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nearby_connections/nearby_connections.dart';
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: discovering
-                  ? CircularProgressIndicator()
+                  ? discoveringWidgets()
                   : Text(
                       'Please run the RetroDevice and enable Peer-to-peer service',
                       textAlign: TextAlign.center,
@@ -160,6 +161,43 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       );
+
+  Widget discoveringWidgets() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(),
+        SizedBox(height: 20),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: DefaultTextStyle(
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    'Finding your device',
+                    speed: const Duration(milliseconds: 100),
+                  ),
+                  TypewriterAnimatedText(
+                    'RetroDevice is awesome',
+                    speed: const Duration(milliseconds: 100),
+                  ),
+                  TypewriterAnimatedText(
+                    'Turn everything into hologram!',
+                    speed: const Duration(milliseconds: 100),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget connected(context) => Container(
         width: MediaQuery.of(context).size.width,
@@ -282,11 +320,10 @@ class _HomePageState extends State<HomePage> {
                           id,
                           onConnectionInitiated: (id, info) {
                             onConnectionInit(id, info);
-                            print("onConnectinoInitiaited");
                           },
                           onConnectionResult: (id, status) {
-                            showSnackbar(status);
                             if (status == Status.CONNECTED) {
+                              showSnackbar("Connected to $name");
                               setState(() {
                                 device.name = name;
                                 device.id = id;
@@ -298,10 +335,11 @@ class _HomePageState extends State<HomePage> {
                                 discovering = false;
                               });
                               Nearby().stopDiscovery();
-                            }
+                            } else
+                              showSnackbar("Connection rejected");
                           },
                           onDisconnected: (id) {
-                            showSnackbar("Disconnected from: $id, id $id");
+                            showSnackbar("Disconnected from: $name, id $id");
                             setState(() {
                               Provider.of<RetroProvider>(context, listen: false)
                                   .isConnected = false;
@@ -317,10 +355,10 @@ class _HomePageState extends State<HomePage> {
           );
         },
         onEndpointLost: (id) {
-          showSnackbar("Lost discovered Endpoint: $id, id $id");
+          showSnackbar("Lost discovered Endpoint: ${device.name}, id $id");
         },
       );
-      showSnackbar("DISCOVERING: " + a.toString());
+      if (a) showSnackbar("Discovering RetroDevices");
       setState(() {
         discovering = a;
       });
@@ -362,8 +400,7 @@ class _HomePageState extends State<HomePage> {
                         showSnackbar(endid + ": FAILED to transfer file");
                       } else if (payloadTransferUpdate.status ==
                           PayloadStatus.SUCCESS) {
-                        showSnackbar(
-                            "$endid success, total bytes = ${payloadTransferUpdate.totalBytes}");
+                        showSnackbar("Object sent successfully");
                       }
                     },
                   );
