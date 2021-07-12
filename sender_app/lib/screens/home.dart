@@ -8,6 +8,7 @@ import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 import 'package:sender_app/helpers/provider.dart';
 import 'package:sender_app/models/device.dart';
+import 'package:sender_app/screens/draw.dart';
 import 'package:sender_app/screens/photo_view.dart';
 import 'package:sender_app/styles/style.dart';
 
@@ -497,7 +498,11 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  void _selectDraw() {}
+  void _selectDraw() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => DrawPage(),
+    ));
+  }
 
   void showSnackbar(dynamic a) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
