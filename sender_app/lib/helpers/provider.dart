@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:sender_app/models/device.dart';
 
 class RetroProvider extends ChangeNotifier {
   bool _isConnected;
-  String deviceName;
+  RetroDevice device;
 
   set isConnected(bool b) {
     _isConnected = b;
@@ -23,7 +24,7 @@ class RetroProvider extends ChangeNotifier {
   RetroProvider() {
     grantPermissions();
     _isConnected = false; // Get Bluetooth connection and check for RetroDevice.
-    deviceName =
-        'Retro 3'; // Get Device name if there is a connected RetroDevice.
+    device =
+        RetroDevice(); // Get Device name if there is a connected RetroDevice.
   }
 }

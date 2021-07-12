@@ -8,6 +8,7 @@ import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 import 'package:sender_app/helpers/provider.dart';
 import 'package:sender_app/models/device.dart';
+import 'package:sender_app/screens/photo_view.dart';
 import 'package:sender_app/styles/style.dart';
 
 class HomePage extends StatefulWidget {
@@ -331,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                                     context,
                                     listen: false);
                                 provider.isConnected = true;
-                                provider.deviceName = device.name;
+                                provider.device = device;
                                 discovering = false;
                               });
                               Nearby().stopDiscovery();
@@ -348,6 +349,10 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
+                    // ElevatedButton(
+                    //   onPressed: () => Navigator.of(context).pop(),
+                    //   child: Text("Reject connection"),
+                    // ),
                   ],
                 ),
               );
@@ -368,58 +373,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onConnectionInit(String id, ConnectionInfo info) {
-    showDialog(
-      context: context,
-      builder: (builder) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text("id: " + id),
-              Text("Token: " + info.authenticationToken),
-              Text("Name: " + info.endpointName),
-              SizedBox(height: 5),
-              ElevatedButton(
-                child: Text("Accept Connection"),
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    device.info = info;
-                    device.id = id;
-                  });
-                  Nearby().acceptConnection(
-                    id,
-                    onPayLoadRecieved: null,
-                    onPayloadTransferUpdate: (endid, payloadTransferUpdate) {
-                      if (payloadTransferUpdate.status ==
-                          PayloadStatus.IN_PROGRESS) {
-                        print(payloadTransferUpdate.bytesTransferred);
-                      } else if (payloadTransferUpdate.status ==
-                          PayloadStatus.FAILURE) {
-                        print("failed");
-                        showSnackbar(endid + ": FAILED to transfer file");
-                      } else if (payloadTransferUpdate.status ==
-                          PayloadStatus.SUCCESS) {
-                        showSnackbar("Object sent successfully");
-                      }
-                    },
-                  );
-                },
-              ),
-              ElevatedButton(
-                child: Text("Reject Connection"),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  try {
-                    await Nearby().rejectConnection(id);
-                  } catch (e) {
-                    showSnackbar(e);
-                  }
-                },
-              ),
-            ],
-          ),
-        );
+    setState(() {
+      device.info = info;
+      device.id = id;
+    });
+    Nearby().acceptConnection(
+      id,
+      onPayLoadRecieved: null,
+      onPayloadTransferUpdate: (endid, payloadTransferUpdate) {
+        if (payloadTransferUpdate.status == PayloadStatus.IN_PROGRESS) {
+          print(payloadTransferUpdate.bytesTransferred);
+        } else if (payloadTransferUpdate.status == PayloadStatus.FAILURE) {
+          print("failed");
+          showSnackbar(endid + ": FAILED to transfer file");
+        } else if (payloadTransferUpdate.status == PayloadStatus.SUCCESS) {
+          //showSnackbar("Object sent successfully");
+        }
       },
     );
   }
@@ -518,10 +487,14 @@ class _HomePageState extends State<HomePage> {
     if (file == null) return;
     int payloadId = await Nearby().sendFilePayload(device.id, file.path);
     showSnackbar("Sending file to ${device.name}");
+    print(file.path);
     Nearby().sendBytesPayload(
         device.id,
         Uint8List.fromList(
             "$payloadId:${file.path.split('/').last}".codeUnits));
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ImagePage(path: file.path),
+    ));
   }
 
   void _selectDraw() {}
