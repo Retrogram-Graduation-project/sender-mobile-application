@@ -47,6 +47,18 @@ class _ImagePageState extends State<ImagePage> {
 
   void onScaleState(PhotoViewScaleState scaleState) {
     print(scaleState);
+    double newScale, newRotation = 0;
+
+    if (scaleState == PhotoViewScaleState.initial)
+      newScale = 0.045;
+    else if (scaleState == PhotoViewScaleState.covering)
+      newScale = 0.15873015873015872;
+    else
+      newScale = 0.6;
+    Nearby().sendBytesPayload(
+        provider.device.id, Uint8List.fromList("s45:$newScale".codeUnits));
+    Nearby().sendBytesPayload(
+        provider.device.id, Uint8List.fromList("r45:$newRotation".codeUnits));
   }
 
   @override
