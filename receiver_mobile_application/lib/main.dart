@@ -39,6 +39,8 @@ class _MyBodyState extends State<Body> {
       Map(); //store filename mapped to corresponding payloadId
 
   void discover() async {
+    if (await Nearby().checkLocationPermission())
+      Nearby().askLocationPermission();
     bool a = false;
     while (!a) {
       try {
@@ -58,7 +60,7 @@ class _MyBodyState extends State<Body> {
             discover();
           },
         );
-        showSnackbar("ADVERTISING: " + a.toString());
+        if (a) showSnackbar("START ADVERTISING");
       } catch (exception) {
         showSnackbar(exception);
       }
