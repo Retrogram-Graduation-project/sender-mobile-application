@@ -183,22 +183,22 @@ class _DrawPageState extends State<DrawPage> {
                           onPressed: () {
                             selectColor();
                           }),
-                      IconButton(
-                          icon: Icon(
-                            Icons.delete_sweep_rounded,
-                            color: selectedColor == Colors.white
-                                ? previousColor
-                                : selectedColor,
-                          ),
-                          onPressed: () {
-                            print("Going inside function");
-                            sendDrawPayload();
-                            // this.setState(() {
-                            //   if (selectedColor != Colors.white)
-                            //     previousColor = selectedColor;
-                            //   selectedColor = Colors.white;
-                            // });
-                          }),
+                      // IconButton(
+                      //     icon: Icon(
+                      //       Icons.delete_sweep_rounded,
+                      //       color: selectedColor == Colors.white
+                      //           ? previousColor
+                      //           : selectedColor,
+                      //     ),
+                      //     onPressed: () {
+                      //       print("Going inside function");
+                      //       sendDrawPayload();
+                      //       // this.setState(() {
+                      //       //   if (selectedColor != Colors.white)
+                      //       //     previousColor = selectedColor;
+                      //       //   selectedColor = Colors.white;
+                      //       // });
+                      //     }),
                       Expanded(
                         child: Slider(
                           min: 1.0,
