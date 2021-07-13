@@ -10,6 +10,7 @@ import 'package:sender_app/helpers/provider.dart';
 import 'package:sender_app/models/device.dart';
 import 'package:sender_app/screens/draw.dart';
 import 'package:sender_app/screens/photo_view.dart';
+import 'package:sender_app/screens/splash.dart';
 import 'package:sender_app/styles/style.dart';
 
 class HomePage extends StatefulWidget {
@@ -300,7 +301,7 @@ class _HomePageState extends State<HomePage> {
     try {
       bool a = await Nearby().startDiscovery(
         userName,
-        Strategy.P2P_STAR,
+        Strategy.P2P_POINT_TO_POINT,
         onEndpointFound: (id, name, serviceId) {
           // show sheet automatically to request connection
           showDialog(
@@ -346,6 +347,11 @@ class _HomePageState extends State<HomePage> {
                               Provider.of<RetroProvider>(context, listen: false)
                                   .isConnected = false;
                             });
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ),
+                                (route) => true);
                           },
                         );
                       },
