@@ -1,10 +1,36 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:nearby_connections/nearby_connections.dart';
+import 'package:provider/provider.dart';
+import 'package:sender_app/helpers/provider.dart';
 
 class DrawingArea {
   Offset point;
   Paint areaPaint;
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> ret = {};
+    Map<String, String> p = {
+      '"direction"': '"${point.direction.toString()}"',
+      '"distance"': '"${point.distance.toString()}"',
+      '"distanceSquared"': '"${point.distanceSquared.toString()}"',
+      '"dx"': '"${point.dx.toString()}"',
+      '"dy"': '"${point.dy.toString()}"',
+      '"isFinite"': '"${point.isFinite.toString()}"',
+      '"isInfinite"': '"${point.isInfinite.toString()}"',
+    };
+
+    Map<String, String> a = {
+      '"color"': '"${areaPaint.color.toString()}"',
+      '"strokeWidth"': '"${areaPaint.strokeWidth.toString()}"',
+    };
+    ret['"point"'] = p;
+    ret['"areaPaint"'] = a;
+    return ret;
+  }
 
   DrawingArea({this.point, this.areaPaint});
 }
@@ -61,6 +87,22 @@ class _DrawPageState extends State<DrawPage> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      String bytes = "p45:\n";
+
+      for (int i = 0; i < points.length; i++) {
+        if (points[i] == null)
+          bytes += "null";
+        else
+          bytes += (points[i].toJson().toString());
+        if (i != points.length - 1) bytes += '\n';
+      }
+
+      if (bytes.split('\n').length > 1)
+        Nearby().sendBytesPayload(
+            Provider.of<RetroProvider>(context, listen: false).device.id,
+            Uint8List.fromList(bytes.codeUnits));
+    });
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     print("build function");
