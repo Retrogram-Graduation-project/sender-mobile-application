@@ -68,29 +68,22 @@ class _DrawPageState extends State<DrawPage> {
     );
   }
 
-  void sendDrawPayload() {
+  void sendDrawPayload(DrawingArea a) {
     print("Sending future");
     String bytes = "p45:\n";
 
-    for (int i = 0; i < points.length; i++) {
-      if (points[i] == null)
-        bytes += "null";
-      else
-        bytes += (points[i].toJson().toString());
-      if (i != points.length - 1) bytes += '\n';
-    }
-    print(bytes.length.toString() + " ??????????");
-    if (bytes.split('\n').length > 1)
-      Nearby().sendBytesPayload(
-          Provider.of<RetroProvider>(context, listen: false).device.id,
-          Uint8List.fromList(bytes.codeUnits));
+    if (a == null)
+      bytes += "null";
+    else
+      bytes += a.toJson();
+
+    Nearby().sendBytesPayload(
+        Provider.of<RetroProvider>(context, listen: false).device.id,
+        Uint8List.fromList(bytes.codeUnits));
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      sendDrawPayload();
-    });
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
@@ -130,30 +123,35 @@ class _DrawPageState extends State<DrawPage> {
                     child: GestureDetector(
                       onPanDown: (details) {
                         this.setState(() {
-                          points.add(DrawingArea(
+                          DrawingArea a = DrawingArea(
                               point: details.localPosition,
                               areaPaint: Paint()
                                 ..strokeCap = StrokeCap.round
                                 ..isAntiAlias = true
                                 ..color = selectedColor
-                                ..strokeWidth = strokeWidth));
+                                ..strokeWidth = strokeWidth);
+                          points.add(a);
+                          sendDrawPayload(a);
                         });
                       },
                       onPanUpdate: (details) {
                         this.setState(() {
-                          points.add(DrawingArea(
+                          DrawingArea a = DrawingArea(
                               point: details.localPosition,
                               areaPaint: Paint()
                                 ..strokeCap = StrokeCap.round
                                 ..isAntiAlias = true
                                 ..color = selectedColor
-                                ..strokeWidth = strokeWidth));
+                                ..strokeWidth = strokeWidth);
+                          points.add(a);
+                          sendDrawPayload(a);
                         });
                       },
                       onPanEnd: (details) {
                         this.setState(() {
                           points.add(null);
                         });
+                        sendDrawPayload(null);
                       },
                       child: SizedBox.expand(
                         child: ClipRRect(
@@ -192,7 +190,6 @@ class _DrawPageState extends State<DrawPage> {
                       //     ),
                       //     onPressed: () {
                       //       print("Going inside function");
-                      //       sendDrawPayload();
                       //       // this.setState(() {
                       //       //   if (selectedColor != Colors.white)
                       //       //     previousColor = selectedColor;
@@ -221,6 +218,12 @@ class _DrawPageState extends State<DrawPage> {
                             color: Colors.black,
                           ),
                           onPressed: () {
+                            Nearby().sendBytesPayload(
+                                Provider.of<RetroProvider>(context,
+                                        listen: false)
+                                    .device
+                                    .id,
+                                Uint8List.fromList("p45:\ndelete".codeUnits));
                             this.setState(() {
                               points.clear();
                             });
