@@ -394,7 +394,7 @@ class _HomePageState extends State<HomePage> {
           print("failed");
           showSnackbar(endid + ": FAILED to transfer file");
         } else if (payloadTransferUpdate.status == PayloadStatus.SUCCESS) {
-          //showSnackbar("Object sent successfully");
+          // showSnackbar("Object sent successfully");
         }
       },
     );

@@ -11,25 +11,8 @@ class DrawingArea {
   Offset point;
   Paint areaPaint;
 
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> ret = {};
-    Map<String, String> p = {
-      '"direction"': '"${point.direction.toString()}"',
-      '"distance"': '"${point.distance.toString()}"',
-      '"distanceSquared"': '"${point.distanceSquared.toString()}"',
-      '"dx"': '"${point.dx.toString()}"',
-      '"dy"': '"${point.dy.toString()}"',
-      '"isFinite"': '"${point.isFinite.toString()}"',
-      '"isInfinite"': '"${point.isInfinite.toString()}"',
-    };
-
-    Map<String, String> a = {
-      '"color"': '"${areaPaint.color.toString()}"',
-      '"strokeWidth"': '"${areaPaint.strokeWidth.toString()}"',
-    };
-    ret['"point"'] = p;
-    ret['"areaPaint"'] = a;
-    return ret;
+  String toJson() {
+    return "${point.dx.toString()},${point.dy.toString()},${areaPaint.color.toString()},${areaPaint.strokeWidth.toString()}";
   }
 
   DrawingArea({this.point, this.areaPaint});
@@ -85,27 +68,31 @@ class _DrawPageState extends State<DrawPage> {
     );
   }
 
+  void sendDrawPayload() {
+    print("Sending future");
+    String bytes = "p45:\n";
+
+    for (int i = 0; i < points.length; i++) {
+      if (points[i] == null)
+        bytes += "null";
+      else
+        bytes += (points[i].toJson().toString());
+      if (i != points.length - 1) bytes += '\n';
+    }
+    print(bytes.length.toString() + " ??????????");
+    if (bytes.split('\n').length > 1)
+      Nearby().sendBytesPayload(
+          Provider.of<RetroProvider>(context, listen: false).device.id,
+          Uint8List.fromList(bytes.codeUnits));
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      String bytes = "p45:\n";
-
-      for (int i = 0; i < points.length; i++) {
-        if (points[i] == null)
-          bytes += "null";
-        else
-          bytes += (points[i].toJson().toString());
-        if (i != points.length - 1) bytes += '\n';
-      }
-
-      if (bytes.split('\n').length > 1)
-        Nearby().sendBytesPayload(
-            Provider.of<RetroProvider>(context, listen: false).device.id,
-            Uint8List.fromList(bytes.codeUnits));
+      sendDrawPayload();
     });
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    print("build function");
 
     return Scaffold(
       body: Stack(
@@ -204,11 +191,13 @@ class _DrawPageState extends State<DrawPage> {
                                 : selectedColor,
                           ),
                           onPressed: () {
-                            this.setState(() {
-                              if (selectedColor != Colors.white)
-                                previousColor = selectedColor;
-                              selectedColor = Colors.white;
-                            });
+                            print("Going inside function");
+                            sendDrawPayload();
+                            // this.setState(() {
+                            //   if (selectedColor != Colors.white)
+                            //     previousColor = selectedColor;
+                            //   selectedColor = Colors.white;
+                            // });
                           }),
                       Expanded(
                         child: Slider(
@@ -259,7 +248,6 @@ class MyCustomPainter extends CustomPainter {
     Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
     canvas.drawRect(rect, background);
     canvas.clipRect(rect);
-    print("Paint");
     for (int x = 0; x < points.length - 1; x++) {
       if (points[x] != null && points[x + 1] != null) {
         canvas.drawLine(
