@@ -472,8 +472,10 @@ class _HomePageState extends State<HomePage> {
                       child: Text("Send"),
                       onPressed: () {
                         if (_textController.text.isEmpty) return;
-                        Nearby().sendBytesPayload(device.id,
-                            Uint8List.fromList(_textController.text.codeUnits));
+                        Nearby().sendBytesPayload(
+                            device.id,
+                            Uint8List.fromList(
+                                ("t45:" + _textController.text).codeUnits));
                         _textController.text = "";
                       },
                     ),
