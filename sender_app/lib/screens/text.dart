@@ -70,6 +70,15 @@ class _TextPageState extends State<TextPage> {
                           setState(() {
                             fontSize = newSize.floor();
                           });
+
+                          Nearby().sendBytesPayload(
+                            Provider.of<RetroProvider>(context, listen: false)
+                                .device
+                                .id,
+                            Uint8List.fromList(
+                                ("t45:\n${_textController.text}\n${selectedColor.value.toRadixString(16)}\n$fontSize")
+                                    .codeUnits),
+                          );
                         },
                       ),
                     ),
@@ -116,13 +125,15 @@ class _TextPageState extends State<TextPage> {
                         this.setState(() {
                           text = _textController.text;
                         });
+
                         Nearby().sendBytesPayload(
-                          Provider.of<RetroProvider>(context).device.id,
+                          Provider.of<RetroProvider>(context, listen: false)
+                              .device
+                              .id,
                           Uint8List.fromList(
-                              ("t45:\n${_textController.text}\n$selectedColor\n$fontSize")
+                              ("t45:\n${_textController.text}\n${selectedColor.value.toRadixString(16)}\n$fontSize")
                                   .codeUnits),
                         );
-                        _textController.text = "";
                         Navigator.of(context).pop();
                       },
                     ),
@@ -150,6 +161,12 @@ class _TextPageState extends State<TextPage> {
                   this.setState(() {
                     selectedColor = color;
                   });
+                Nearby().sendBytesPayload(
+                  Provider.of<RetroProvider>(context, listen: false).device.id,
+                  Uint8List.fromList(
+                      ("t45:\n${_textController.text}\n${selectedColor.value.toRadixString(16)}\n$fontSize")
+                          .codeUnits),
+                );
               },
             ),
           ),

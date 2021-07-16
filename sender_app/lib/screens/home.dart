@@ -11,6 +11,7 @@ import 'package:sender_app/models/device.dart';
 import 'package:sender_app/screens/draw.dart';
 import 'package:sender_app/screens/photo_view.dart';
 import 'package:sender_app/screens/splash.dart';
+import 'package:sender_app/screens/text.dart';
 import 'package:sender_app/styles/style.dart';
 
 class HomePage extends StatefulWidget {
@@ -449,44 +450,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _selectText() {
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Type words to be sent"),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(controller: _textController),
-                SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      child: Text("Close"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    TextButton(
-                      child: Text("Send"),
-                      onPressed: () {
-                        if (_textController.text.isEmpty) return;
-                        Nearby().sendBytesPayload(
-                            device.id,
-                            Uint8List.fromList(
-                                ("t45:" + _textController.text).codeUnits));
-                        _textController.text = "";
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => TextPage(),
+    ));
   }
 
   void _selectImage() async {
