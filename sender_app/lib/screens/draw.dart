@@ -26,14 +26,12 @@ class DrawPage extends StatefulWidget {
 class _DrawPageState extends State<DrawPage> {
   List<DrawingArea> points;
   Color selectedColor;
-  Color previousColor;
   double strokeWidth;
 
   @override
   void initState() {
     super.initState();
-    selectedColor = Colors.black;
-    previousColor = Colors.black;
+    selectedColor = Colors.white;
     strokeWidth = 2.0;
     points = [];
   }
@@ -49,9 +47,10 @@ class _DrawPageState extends State<DrawPage> {
               pickerColor: selectedColor,
               onColorChanged: (color) {
                 this.setState(() {
-                  if (selectedColor != Colors.white)
-                    previousColor = selectedColor;
-                  selectedColor = color;
+                  if (color != Colors.black)
+                    selectedColor = color;
+                  else
+                    selectedColor = Colors.white;
                 });
               },
             ),
@@ -167,16 +166,14 @@ class _DrawPageState extends State<DrawPage> {
                 Container(
                   width: width * 0.80,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.black,
                       borderRadius: BorderRadius.all(Radius.circular(20.0))),
                   child: Row(
                     children: <Widget>[
                       IconButton(
                           icon: Icon(
                             Icons.color_lens,
-                            color: selectedColor == Colors.white
-                                ? previousColor
-                                : selectedColor,
+                            color: selectedColor,
                           ),
                           onPressed: () {
                             selectColor();
@@ -201,9 +198,7 @@ class _DrawPageState extends State<DrawPage> {
                           min: 1.0,
                           max: 5.0,
                           label: "Stroke $strokeWidth",
-                          activeColor: selectedColor == Colors.white
-                              ? previousColor
-                              : selectedColor,
+                          activeColor: selectedColor,
                           value: strokeWidth,
                           onChanged: (double value) {
                             this.setState(() {
@@ -215,7 +210,7 @@ class _DrawPageState extends State<DrawPage> {
                       IconButton(
                           icon: Icon(
                             Icons.layers_clear,
-                            color: Colors.black,
+                            color: selectedColor,
                           ),
                           onPressed: () {
                             Nearby().sendBytesPayload(

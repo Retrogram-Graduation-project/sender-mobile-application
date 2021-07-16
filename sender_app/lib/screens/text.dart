@@ -157,10 +157,12 @@ class _TextPageState extends State<TextPage> {
             child: BlockPicker(
               pickerColor: selectedColor,
               onColorChanged: (color) {
-                if (color != Colors.black)
-                  this.setState(() {
+                this.setState(() {
+                  if (color != Colors.black)
                     selectedColor = color;
-                  });
+                  else
+                    selectedColor = Colors.white;
+                });
                 Nearby().sendBytesPayload(
                   Provider.of<RetroProvider>(context, listen: false).device.id,
                   Uint8List.fromList(
