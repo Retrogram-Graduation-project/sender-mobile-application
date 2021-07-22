@@ -85,7 +85,8 @@ class _DrawPageState extends State<DrawPage> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-
+    print(width * 0.80);
+    print(height * 0.80);
     return Scaffold(
       body: Stack(
         children: <Widget>[

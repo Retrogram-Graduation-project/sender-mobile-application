@@ -51,10 +51,7 @@ class _ImagePageState extends State<ImagePage> {
 
     if (scaleState == PhotoViewScaleState.initial)
       newScale = 0.045;
-    else if (scaleState == PhotoViewScaleState.covering)
-      newScale = 0.15873015873015872;
-    else
-      newScale = 0.6;
+    else if (scaleState == PhotoViewScaleState.covering) newScale = maxScale;
     Nearby().sendBytesPayload(
         provider.device.id, Uint8List.fromList("s45:$newScale".codeUnits));
     Nearby().sendBytesPayload(
